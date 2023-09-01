@@ -3,7 +3,7 @@ import Link from "next/link"
 export default function Top() {
     return (
       <>
-        <div className="flex flex-col items-center mt-[220px]">
+        <div className="flex flex-col items-center mt-[280px]">
             <div className="text-[70px] font-bold">ポケモンタイプ相性クイズ</div>
             <div className="mt-1 text-[30px] text-red-500 font-serif">Pokemon type compatibility Quiz</div>
             <div className="flex flex-row justify-around w-[500px] mt-[20px] px-10">
