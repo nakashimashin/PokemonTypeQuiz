@@ -1,8 +1,67 @@
+'use client'
+import { useState } from "react";
+
+
 export default function Buttons() {
+    const [pokemonID, setPokemonID] = useState(0);
+
+    const [pokemonType, setPokemonType] = useState("なし");
+
+    const [pokemonImageUrl, setPokemonImageUrl] = useState("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png");
+
+    const [pokemonDamage, setPokemonDamage] = useState("なし");
+
+    const fetchPokemon = async (num:number) =>{
+        const res = await fetch("https://pokeapi.co/api/v2/type/"+num );
+        const result = await res.json();
+        return result;
+    };
+
+    const handleClick = async (num:number) => {
+        const pokemon = await fetchPokemon(num);
+        
+        setPokemonID(pokemon['id']);
+        setPokemonType(pokemon['names'][0]['name'])
+
+        const damageDouble = pokemon['damage_relations']['double_damage_to']
+        
+        let strongType = ":"
+
+        for (const key in damageDouble){
+            const pokemon2 = damageDouble[key]['url'];
+
+            const fetchType = async () => {
+                const res = await fetch(pokemon2);
+                const result = await res.json();
+                return result;
+            }
+
+            const typenames = await fetchType();
+            const typename = typenames['names'][0]['name'];
+            strongType += typename + " ";
+        }
+        setPokemonDamage(strongType);
+
+        const pokemonLength = pokemon['pokemon'].length;
+        
+        const fetchPokemonImage = async () => {
+            const index = Math.floor(Math.random()*pokemonLength + 1);
+            const pokemonUrl = pokemon['pokemon'][index]['pokemon']['url']
+            const res = await fetch(pokemonUrl);
+            const result = await res.json();
+            return result;
+        };
+        const image = await fetchPokemonImage();
+        setPokemonImageUrl(image['sprites']['front_default'])
+        console.log(pokemonID);
+        console.log(pokemonType);
+        console.log(pokemonDamage);
+    }
+
     return (
       <>
-        <div className="flex flex-row space-x-[30px]">
-          <button className="bg-orange-500 hover:bg-orange-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ほのお</button>
+        <div className="flex flex-row space-x-[30px] mt-[30px]">
+          <button onClick={() => handleClick(10)} className="bg-orange-500 hover:bg-orange-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ほのお</button>
           <button className="bg-blue-400 hover:bg-blue-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">みず</button>
           <button className="bg-green-500 hover:bg-green-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">くさ</button>
           <button className="bg-gray-400 hover:bg-gray-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ノーマル</button>
