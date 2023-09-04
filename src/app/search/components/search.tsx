@@ -2,7 +2,6 @@
 import React from 'react';
 import { useState } from "react";
 
-
 export default function TypeSearch() {
     const [pokemonID, setPokemonID] = useState(0);
 
@@ -11,6 +10,10 @@ export default function TypeSearch() {
     const [pokemonImageUrl, setPokemonImageUrl] = useState("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png");
 
     const [pokemonDamage, setPokemonDamage] = useState("なし");
+
+    const [open, setOpen] = useState(false);
+    const handleClose = () => setOpen(false);
+
 
     const fetchPokemon = async (num:number) =>{
         const res = await fetch("https://pokeapi.co/api/v2/type/"+num );

@@ -1,6 +1,10 @@
 'use client'
 import React from 'react';
 import { useState } from "react";
+import { Typography } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal/Modal';
+import Box from '@material-ui/core/Box/Box';
+
 
 
 interface QuizData {
@@ -8,6 +12,20 @@ interface QuizData {
   answer: string
   image: any
 }
+
+const style ={
+  position : 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform : 'translate(-50%, -50%)',
+  height: 400,
+  width: 700,
+  bgcolor: 'background.paper',
+  border: '3px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 
 function QuizApi(): QuizData[] {
   const outputDataList: QuizData[] = [{
@@ -33,6 +51,9 @@ export default function Buttons() {
 
     const QuizArray : QuizData[] = QuizApi();
     const [QuizIndex, setQuizIndex] = useState(0);
+
+    const [open, setOpen] = useState(false);
+    const handleClose = () => setOpen(false);
 
     const [pokemonID, setPokemonID] = useState(0);
     const [pokemonType, setPokemonType] = useState("なし");
@@ -90,12 +111,25 @@ export default function Buttons() {
       console.log("Answer")
       setQuizIndex(QuizIndex+1)
       if(QuizIndex+1 == 2){
+        setOpen(true)
         console.log("発火")
       }
     }
 
     return (
       <>
+        <Modal 
+            open={open}
+            onClose={handleClose}
+            aria-labelledby='modal-modal-title'
+            aria-describedby='modal-modal-description'
+        >
+            <Box sx={style} className='flex flex-col justify-center items-center'>
+                <Typography className='text-center'>
+                </Typography>
+            </Box>
+        </Modal>
+
         <div className='flex flex-row'>
           <div className="flex flex-col">
               <img src={QuizArray[QuizIndex].image} className="border w-[300px] h-[300px]" />
