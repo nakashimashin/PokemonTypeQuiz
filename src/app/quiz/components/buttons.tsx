@@ -1,5 +1,7 @@
 'use client'
+import React from 'react';
 import { useState } from "react";
+import Question from "./question";
 
 
 export default function Buttons() {
@@ -55,11 +57,18 @@ export default function Buttons() {
         setPokemonImageUrl(image['sprites']['front_default'])
         console.log(pokemonID);
         console.log(pokemonType);
-        console.log(pokemonDamage);
+        console.log(pokemonDamage); 
     }
 
     return (
       <>
+        <div className="flex flex-row">
+            <img src="" className="border w-[300px] h-[300px]" />
+            <div className="ml-[30px]">
+                <p className="text-[50px]">{pokemonID}タイプ</p>
+                <p className="text-[50px]">効果抜群</p>
+            </div>
+        </div>
         <div className="flex flex-row space-x-[30px] mt-[30px]">
           <button onClick={() => handleClick(10)} className="bg-orange-500 hover:bg-orange-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ほのお</button>
           <button className="bg-blue-400 hover:bg-blue-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">みず</button>

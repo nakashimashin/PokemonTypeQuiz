@@ -1,4 +1,4 @@
-
+import pokemonID from "./buttons";
 
 export default function Question() {
     return (
