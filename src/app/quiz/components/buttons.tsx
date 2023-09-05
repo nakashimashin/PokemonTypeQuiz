@@ -48,9 +48,10 @@ return outputDataList;
 }
 
 export default function Buttons() {
-
     const QuizArray : QuizData[] = QuizApi();
     const [QuizIndex, setQuizIndex] = useState(0);
+
+    const [CorrectCount, setCorrectCount] = useState(0);
 
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
@@ -102,18 +103,23 @@ export default function Buttons() {
         };
         const image = await fetchPokemonImage();
         setPokemonImageUrl(image['sprites']['front_default'])
-        console.log(pokemonID);
-        console.log(pokemonType);
-        console.log(pokemonDamage); 
     }
 
     const AnswerClick = () => {
-      console.log("Answer")
-      setQuizIndex(QuizIndex+1)
-      if(QuizIndex+1 == 2){
+      let answer = QuizArray[QuizIndex].answer;
+      
+      if(answer == pokemonType){
+        console.log("正解");
+        const newCorrectCount = CorrectCount + 1;
+        setCorrectCount((CorrectCount) => newCorrectCount);
+        console.log(newCorrectCount);
+      }      
+      if(QuizIndex+1 === 3){
         setOpen(true)
         console.log("発火")
+        return
       }
+      setQuizIndex(QuizIndex+1)
     }
 
     return (
@@ -126,6 +132,7 @@ export default function Buttons() {
         >
             <Box sx={style} className='flex flex-col justify-center items-center'>
                 <Typography className='text-center'>
+                  <div>{CorrectCount}</div>
                 </Typography>
             </Box>
         </Modal>
@@ -137,7 +144,7 @@ export default function Buttons() {
           </div>
           <div className='flex flex-col ml-[50px]'>
             <img src={pokemonImageUrl} className="border w-[300px] h-[300px]" />
-            <p className="text-[50px]">タイプ : {pokemonType}</p>
+            <div className="text-[50px]">タイプ : {pokemonType}</div>
           </div>
         </div>
         <button onClick={AnswerClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>Answer</button>
