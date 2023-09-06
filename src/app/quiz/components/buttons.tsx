@@ -107,64 +107,35 @@ export default function Buttons() {
             return result;
         };
         const info = await fetchPokemonInfo();
-        console.log(info['names'])
         setPokemonImageUrl(info['sprites']['front_default'])
     }
-
-    
-    const fetchName = async () =>{
-      const res = await fetch("https://pokeapi.co/api/v2/pokemon/3");
-      const result = await res.json();
-      return result;
-    };
-
     
     const AnswerClick = async () => {
       console.log("発火")
-      const pokemon = await fetchName();
-      setPokemonImage(pokemon['sprites']['front_default']);
-      console.log(pokemon['types']);
+      const index = Math.floor(Math.random()*18 + 1);
+      const pokemon = await fetchPokemon(index);
+      console.log(pokemon['names'][0]['name']);
+      setQusetionType(pokemon['names'][0]['name']);
 
-      const fetchType = async () => {
-        const pokemonUrl = pokemon['types'][0]['type']['url']
-        const res = await fetch(pokemonUrl);
-        const result = await res.json();
-        return result;
-      }
-      const typeName = await fetchType();
-      console.log(typeName['names'][0]['name']);
-      setQusetionType(typeName['names'][0]['name'])
-
+      const pokemonLength = pokemon['pokemon'].length;
       const fetchPokemonInfo = async () => {
-        const pokemonUrl = pokemon['species']['url']
+        const pokemonNum = Math.floor(Math.random()*pokemonLength + 1);
+        const pokemonUrl = pokemon['pokemon'][pokemonNum]['pokemon']['url']
         const res = await fetch(pokemonUrl);
         const result = await res.json();
         return result;
-    };
+      };
+      const info = await fetchPokemonInfo();
+      setPokemonImage(info['sprites']['front_default']);
 
-    const info = await fetchPokemonInfo();
-    // console.log(info['names'][0]['name']);
-    setPokemonName(info['names'][0]['name']);
-
-      // console.log(pokemon['species']['url'])
-      // console.log(pokemon['names'][0]['name'])
-      // let answer = QuizArray[QuizIndex].answer;
-      
-      // if(answer == pokemonType){
-      //   console.log("正解");
-      //   const newCorrectCount = CorrectCount + 1;
-      //   setCorrectCount((CorrectCount) => newCorrectCount);
-      //   // console.log(newCorrectCount);
-      // }      
-      
-      // if(QuizIndex+1 == 3){
-      //   setOpen(true)
-      //   console.log("発火")
-      //   return
-      // }
-      // const newQuizIndex = QuizIndex + 1;
-      // setQuizIndex((QuizIndex) => newQuizIndex);
-      // console.log(newQuizIndex);
+      const fetchPokemonName = async () => {
+        const pokemonUrl = info['species']['url'];
+        const res = await fetch(pokemonUrl);
+        const result = await res.json();
+        return result;
+      };
+      const name = await fetchPokemonName();
+      setPokemonName(name['names'][0]['name']);
     }
 
     return (
