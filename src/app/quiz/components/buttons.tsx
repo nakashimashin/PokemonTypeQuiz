@@ -25,19 +25,26 @@ export default function Buttons() {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
 
-    const [pokemonType, setPokemonType] = useState("なし");
+    const [pokemonType, setPokemonType] = useState<any>([]);
     const [pokemonImageUrl, setPokemonImageUrl] = useState(" ");
     const [pokemonNameA, setPokemonNameA] = useState(" ");
-    const [pokemonDamage, setPokemonDamage] = useState("なし");
-
+    const [pokemonTypes, setPokemonTypes] = useState<any>("");
     const [pokemonNameQ, setPokemonNameQ] = useState(" ");
     const [pokemonImage, setPokemonImage] = useState(" ");
     const [questionType, setQusetionType] = useState(" ");
     const [questionHalfType, setQuestionHalfType] = useState(" ");
 
+
     useEffect(() => {
       QuestionSet();
     }, [quizIndex]);
+
+    // useEffect(() => {
+    //   console.log("テスト2");
+    //   typesList.push("リンゴ");
+    //   setPokemonTypes(typesList);
+    //   console.log(pokemonTypes);
+    // }, [pokemonType]);
 
 
     const fetchPokemon = async (num:number) =>{
@@ -49,26 +56,9 @@ export default function Buttons() {
     const handleClick = async (num:number) => {
         const pokemon = await fetchPokemon(num);
         
-        setPokemonType(pokemon['names'][0]['name'])
-
-        const damageDouble = pokemon['damage_relations']['double_damage_to']
-        
-        let strongType = ":"
-
-        for (const key in damageDouble){
-            const pokemon2 = damageDouble[key]['url'];
-
-            const fetchType = async () => {
-                const res = await fetch(pokemon2);
-                const result = await res.json();
-                return result;
-            }
-
-            const typenames = await fetchType();
-            const typename = typenames['names'][0]['name'];
-            strongType += typename + " ";
-        }
-        setPokemonDamage(strongType);
+        // setPokemonType(pokemon['names'][0]['name'])
+        setPokemonType([...pokemonType, pokemon['names'][0]['name']]);
+        console.log(pokemonType);
 
         const pokemonLength = pokemon['pokemon'].length;
         
@@ -99,7 +89,6 @@ export default function Buttons() {
       };
       const new_quizIndex = quizIndex+1;
       setQuizIndex(() => new_quizIndex);
-      console.log(new_quizIndex);
     }
     
     const QuestionSet = async () => {
@@ -108,7 +97,6 @@ export default function Buttons() {
       setQusetionType(pokemon['names'][0]['name']);
 
       const doubleDamageFrom = pokemon['damage_relations']['double_damage_from']
-      console.log(doubleDamageFrom);
       let halfType = ""
 
       for (const key in doubleDamageFrom){
@@ -125,7 +113,6 @@ export default function Buttons() {
         halfType += typename + " ";
       }
       setQuestionHalfType(halfType);
-      console.log(questionHalfType);
 
       const pokemonLength = pokemon['pokemon'].length;
       const fetchPokemonInfo = async () => {
