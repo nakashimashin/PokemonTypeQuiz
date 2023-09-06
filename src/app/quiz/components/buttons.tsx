@@ -25,26 +25,19 @@ export default function Buttons() {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
 
-    const [pokemonType, setPokemonType] = useState<any>([]);
-    const [pokemonImageUrl, setPokemonImageUrl] = useState(" ");
+    const [typesList, setTypesList] = useState<string[]>([]);
+    const [pokemonImageUrl, setPokemonImageUrl] = useState<string>(" ");
     const [pokemonNameA, setPokemonNameA] = useState(" ");
-    const [pokemonTypes, setPokemonTypes] = useState<any>("");
+    const [pokemonTypes, setPokemonTypes] = useState("");
     const [pokemonNameQ, setPokemonNameQ] = useState(" ");
     const [pokemonImage, setPokemonImage] = useState(" ");
     const [questionType, setQusetionType] = useState(" ");
-    const [questionHalfType, setQuestionHalfType] = useState(" ");
+    const [questionHalfType, setQuestionHalfType] = useState<string>("");
 
 
     useEffect(() => {
       QuestionSet();
     }, [quizIndex]);
-
-    // useEffect(() => {
-    //   console.log("テスト2");
-    //   typesList.push("リンゴ");
-    //   setPokemonTypes(typesList);
-    //   console.log(pokemonTypes);
-    // }, [pokemonType]);
 
 
     const fetchPokemon = async (num:number) =>{
@@ -56,9 +49,7 @@ export default function Buttons() {
     const handleClick = async (num:number) => {
         const pokemon = await fetchPokemon(num);
         
-        // setPokemonType(pokemon['names'][0]['name'])
-        setPokemonType([...pokemonType, pokemon['names'][0]['name']]);
-        console.log(pokemonType);
+        setTypesList([...typesList, pokemon['names'][0]['name'] + " "]);
 
         const pokemonLength = pokemon['pokemon'].length;
         
@@ -83,6 +74,25 @@ export default function Buttons() {
     }
 
     const AnswerClick = async () => {
+      let items = "";
+      for (const item of typesList){
+        items += item;
+      }
+      const new_pokemonTypes = pokemonTypes + items;
+      setPokemonTypes(() => new_pokemonTypes);
+
+      if(questionHalfType === new_pokemonTypes){
+        console.log(questionHalfType);
+        console.log(new_pokemonTypes);
+        console.log("正解");
+      }else{
+        console.log(questionHalfType);
+        console.log(new_pokemonTypes);
+        console.log("不正解");
+      }
+      setTypesList([]);
+      setPokemonTypes("");
+
       if(quizIndex == 3){
         setOpen(true);
         return
@@ -162,7 +172,7 @@ export default function Buttons() {
           <div className='flex flex-col ml-[50px]'>
             <img src={pokemonImageUrl} className="border w-[300px] h-[300px]" />
             <div className="text-[50px]">名前 : {pokemonNameA}</div>
-            <div className="text-[50px]">タイプ : {pokemonType}</div>
+            <div className="text-[50px]">タイプ : {typesList}</div>
           </div>
         </div>
         <button onClick={AnswerClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>Answer</button>
