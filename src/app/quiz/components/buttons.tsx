@@ -1,9 +1,9 @@
 'use client'
 import React from 'react';
 import { useState } from "react";
-import { Typography } from '@material-ui/core';
 import Modal from '@material-ui/core/Modal/Modal';
 import Box from '@material-ui/core/Box/Box';
+import Link from 'next/link';
 
 
 
@@ -61,6 +61,11 @@ export default function Buttons() {
     const [pokemonImageUrl, setPokemonImageUrl] = useState("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png");
     const [pokemonDamage, setPokemonDamage] = useState("なし");
 
+    const [pokemonName, setPokemonName] = useState(" ");
+    const [pokemonImage, setPokemonImage] = useState(" ");
+    const [questionType, setQusetionType] = useState(" ");
+
+
     const fetchPokemon = async (num:number) =>{
         const res = await fetch("https://pokeapi.co/api/v2/type/"+num );
         const result = await res.json();
@@ -94,32 +99,72 @@ export default function Buttons() {
 
         const pokemonLength = pokemon['pokemon'].length;
         
-        const fetchPokemonImage = async () => {
+        const fetchPokemonInfo = async () => {
             const index = Math.floor(Math.random()*pokemonLength + 1);
             const pokemonUrl = pokemon['pokemon'][index]['pokemon']['url']
             const res = await fetch(pokemonUrl);
             const result = await res.json();
             return result;
         };
-        const image = await fetchPokemonImage();
-        setPokemonImageUrl(image['sprites']['front_default'])
+        const info = await fetchPokemonInfo();
+        console.log(info['names'])
+        setPokemonImageUrl(info['sprites']['front_default'])
     }
 
-    const AnswerClick = () => {
-      let answer = QuizArray[QuizIndex].answer;
-      
-      if(answer == pokemonType){
-        console.log("正解");
-        const newCorrectCount = CorrectCount + 1;
-        setCorrectCount((CorrectCount) => newCorrectCount);
-        console.log(newCorrectCount);
-      }      
-      if(QuizIndex+1 === 3){
-        setOpen(true)
-        console.log("発火")
-        return
+    
+    const fetchName = async () =>{
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon/3");
+      const result = await res.json();
+      return result;
+    };
+
+    
+    const AnswerClick = async () => {
+      console.log("発火")
+      const pokemon = await fetchName();
+      setPokemonImage(pokemon['sprites']['front_default']);
+      console.log(pokemon['types']);
+
+      const fetchType = async () => {
+        const pokemonUrl = pokemon['types'][0]['type']['url']
+        const res = await fetch(pokemonUrl);
+        const result = await res.json();
+        return result;
       }
-      setQuizIndex(QuizIndex+1)
+      const typeName = await fetchType();
+      console.log(typeName['names'][0]['name']);
+      setQusetionType(typeName['names'][0]['name'])
+
+      const fetchPokemonInfo = async () => {
+        const pokemonUrl = pokemon['species']['url']
+        const res = await fetch(pokemonUrl);
+        const result = await res.json();
+        return result;
+    };
+
+    const info = await fetchPokemonInfo();
+    // console.log(info['names'][0]['name']);
+    setPokemonName(info['names'][0]['name']);
+
+      // console.log(pokemon['species']['url'])
+      // console.log(pokemon['names'][0]['name'])
+      // let answer = QuizArray[QuizIndex].answer;
+      
+      // if(answer == pokemonType){
+      //   console.log("正解");
+      //   const newCorrectCount = CorrectCount + 1;
+      //   setCorrectCount((CorrectCount) => newCorrectCount);
+      //   // console.log(newCorrectCount);
+      // }      
+      
+      // if(QuizIndex+1 == 3){
+      //   setOpen(true)
+      //   console.log("発火")
+      //   return
+      // }
+      // const newQuizIndex = QuizIndex + 1;
+      // setQuizIndex((QuizIndex) => newQuizIndex);
+      // console.log(newQuizIndex);
     }
 
     return (
@@ -130,17 +175,20 @@ export default function Buttons() {
             aria-labelledby='modal-modal-title'
             aria-describedby='modal-modal-description'
         >
-            <Box sx={style} className='flex flex-col justify-center items-center'>
-                <Typography className='text-center'>
-                  <div>{CorrectCount}</div>
-                </Typography>
+            <Box sx={style}>
+              <div className='flex flex-col items-center'>
+                  <div className='mt-[60px] text-[50px] text-red-500'>正解数 {CorrectCount}</div>
+                  <Link href="/" className='mt-[80px] w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 text-center text-[30px] text-white font-bold rounded'>TOP</Link>
+              </div>
             </Box>
         </Modal>
 
-        <div className='flex flex-row'>
+        <div className='text-[60px]'>第{QuizIndex+1}問</div>
+        <div className='flex flex-row mt-[10px]'>
           <div className="flex flex-col">
-              <img src={QuizArray[QuizIndex].image} className="border w-[300px] h-[300px]" />
-              <p className="text-[50px]">タイプ : {QuizArray[QuizIndex].question}</p>
+              <img src={pokemonImage} className="border w-[300px] h-[300px]" />
+              <p className="text-[50px]">タイプ : {questionType}</p>
+              <p className="text-[50px]">名前 : {pokemonName}</p>
           </div>
           <div className='flex flex-col ml-[50px]'>
             <img src={pokemonImageUrl} className="border w-[300px] h-[300px]" />
@@ -148,7 +196,7 @@ export default function Buttons() {
           </div>
         </div>
         <button onClick={AnswerClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>Answer</button>
-        <div className="flex flex-row space-x-[30px] mt-[10px]">
+        <div className="flex flex-row space-x-[30px]">
           <button onClick={() => handleClick(10)} className="bg-orange-500 hover:bg-orange-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ほのお</button>
           <button onClick={() => handleClick(11)} className="bg-blue-400 hover:bg-blue-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">みず</button>
           <button onClick={() => handleClick(12)} className="bg-green-500 hover:bg-green-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">くさ</button>
