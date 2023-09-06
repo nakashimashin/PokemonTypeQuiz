@@ -20,7 +20,7 @@ const style ={
 
 export default function Buttons() {
     const [quizIndex, setQuizIndex] = useState(1);
-    const [CorrectCount, setCorrectCount] = useState(0);
+    const [correctCount, setCorrectCount] = useState(0);
 
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
@@ -75,6 +75,7 @@ export default function Buttons() {
 
     const AnswerClick = async () => {
       let items = "";
+      const new_correctCount = correctCount + 1;
       for (const item of typesList){
         items += item;
       }
@@ -82,12 +83,10 @@ export default function Buttons() {
       setPokemonTypes(() => new_pokemonTypes);
 
       if(questionHalfType === new_pokemonTypes){
-        console.log(questionHalfType);
-        console.log(new_pokemonTypes);
         console.log("正解");
+        setCorrectCount(() => new_correctCount);
+        console.log(new_correctCount);
       }else{
-        console.log(questionHalfType);
-        console.log(new_pokemonTypes);
         console.log("不正解");
       }
       setTypesList([]);
@@ -155,7 +154,7 @@ export default function Buttons() {
         >
             <Box sx={style}>
               <div className='flex flex-col items-center'>
-                  <div className='mt-[60px] text-[50px] text-red-500'>正解数 {CorrectCount}</div>
+                  <div className='mt-[60px] text-[50px] text-red-500'>正解数 {correctCount}</div>
                   <Link href="/" className='mt-[80px] w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 text-center text-[30px] text-white font-bold rounded'>TOP</Link>
               </div>
             </Box>
@@ -177,20 +176,20 @@ export default function Buttons() {
         </div>
         <button onClick={AnswerClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>Answer</button>
         <div className="flex flex-row space-x-[30px]">
-          <button onClick={() => handleClick(10)} className="bg-orange-500 hover:bg-orange-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ほのお</button>
-          <button onClick={() => handleClick(11)} className="bg-blue-400 hover:bg-blue-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">みず</button>
-          <button onClick={() => handleClick(12)} className="bg-green-500 hover:bg-green-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">くさ</button>
           <button onClick={() => handleClick(1)} className="bg-gray-400 hover:bg-gray-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ノーマル</button>
           <button onClick={() => handleClick(2)} className="bg-red-500 hover:bg-red-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">かくとう</button>
           <button onClick={() => handleClick(3)} className="bg-sky-400 hover:bg-sky-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ひこう</button>
           <button onClick={() => handleClick(4)} className="bg-purple-500 hover:bg-purple-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">どく</button>
           <button onClick={() => handleClick(5)} className="bg-yellow-600 hover:bg-yellow-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">じめん</button>
           <button onClick={() => handleClick(6)} className="bg-yellow-500 hover:bg-yellow-200 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">いわ</button>
-        </div>
-        <div className="flex flex-row space-x-[30px]">
           <button onClick={() => handleClick(7)} className="bg-lime-500 hover:bg-lime-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">むし</button>
           <button onClick={() => handleClick(8)} className="bg-violet-800 hover:bg-violet-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ゴースト</button>
           <button onClick={() => handleClick(9)} className="bg-slate-400 hover:bg-slate-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">はがね</button>
+        </div>
+        <div className="flex flex-row space-x-[30px]">
+          <button onClick={() => handleClick(10)} className="bg-orange-500 hover:bg-orange-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ほのお</button>
+          <button onClick={() => handleClick(11)} className="bg-blue-400 hover:bg-blue-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">みず</button>
+          <button onClick={() => handleClick(12)} className="bg-green-500 hover:bg-green-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">くさ</button>
           <button onClick={() => handleClick(13)} className="bg-amber-400 hover:bg-amber-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">でんき</button>
           <button onClick={() => handleClick(14)} className="bg-fuchsia-500 hover:bg-fuchsia-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">エスパー</button>
           <button onClick={() => handleClick(15)} className="bg-cyan-500 hover:bg-cyan-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">こおり</button>
