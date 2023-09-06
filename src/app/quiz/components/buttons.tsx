@@ -5,14 +5,6 @@ import Modal from '@material-ui/core/Modal/Modal';
 import Box from '@material-ui/core/Box/Box';
 import Link from 'next/link';
 
-
-
-interface QuizData {
-  question: string
-  answer: string
-  image: any
-}
-
 const style ={
   position : 'absolute' as 'absolute',
   top: '50%',
@@ -26,43 +18,22 @@ const style ={
   p: 4,
 };
 
-
-// function QuizApi(): QuizData[] {
-//   const outputDataList: QuizData[] = [{
-//     question: "ほのお",
-//     answer: "みず",
-//     image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
-//   },
-//   {
-//     question: "くさ",
-//     answer: "ほのお",
-//     image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
-//   },
-//   {
-//     question: "みず",
-//     answer: "くさ",
-//     image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png"
-//   },
-// ];
-// return outputDataList;
-// }
-
 export default function Buttons() {
-    // const QuizArray : QuizData[] = QuizApi();
-    const [quizIndex, setQuizIndex] = useState(0);
+    const [quizIndex, setQuizIndex] = useState(1);
     const [CorrectCount, setCorrectCount] = useState(0);
 
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
 
-    const [pokemonID, setPokemonID] = useState(0);
     const [pokemonType, setPokemonType] = useState("なし");
-    const [pokemonImageUrl, setPokemonImageUrl] = useState("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png");
+    const [pokemonImageUrl, setPokemonImageUrl] = useState(" ");
+    const [pokemonNameA, setPokemonNameA] = useState(" ");
     const [pokemonDamage, setPokemonDamage] = useState("なし");
 
-    const [pokemonName, setPokemonName] = useState(" ");
+    const [pokemonNameQ, setPokemonNameQ] = useState(" ");
     const [pokemonImage, setPokemonImage] = useState(" ");
     const [questionType, setQusetionType] = useState(" ");
+    const [questionHalfType, setQuestionHalfType] = useState(" ");
 
     useEffect(() => {
       QuestionSet();
@@ -78,7 +49,6 @@ export default function Buttons() {
     const handleClick = async (num:number) => {
         const pokemon = await fetchPokemon(num);
         
-        setPokemonID(pokemon['id']);
         setPokemonType(pokemon['names'][0]['name'])
 
         const damageDouble = pokemon['damage_relations']['double_damage_to']
@@ -110,20 +80,52 @@ export default function Buttons() {
             return result;
         };
         const info = await fetchPokemonInfo();
-        setPokemonImageUrl(info['sprites']['front_default'])
+        setPokemonImageUrl(info['sprites']['front_default']);
+
+        const fetchPokemonName = async () => {
+          const pokemonUrl = info['species']['url'];
+          const res = await fetch(pokemonUrl);
+          const result = await res.json();
+          return result;
+        };
+        const name = await fetchPokemonName();
+        setPokemonNameA(name['names'][0]['name']);
     }
 
     const AnswerClick = async () => {
+      if(quizIndex == 3){
+        setOpen(true);
+        return
+      };
       const new_quizIndex = quizIndex+1;
-      setQuizIndex((quizIndex) => new_quizIndex);
+      setQuizIndex(() => new_quizIndex);
       console.log(new_quizIndex);
     }
     
     const QuestionSet = async () => {
       const index = Math.floor(Math.random()*18 + 1);
       const pokemon = await fetchPokemon(index);
-      console.log(pokemon['names'][0]['name']);
       setQusetionType(pokemon['names'][0]['name']);
+
+      const doubleDamageFrom = pokemon['damage_relations']['double_damage_from']
+      console.log(doubleDamageFrom);
+      let halfType = ""
+
+      for (const key in doubleDamageFrom){
+        const pokemon2 = doubleDamageFrom[key]['url'];
+
+        const fetchType = async () => {
+            const res = await fetch(pokemon2);
+            const result = await res.json();
+            return result;
+        }
+
+        const typenames = await fetchType();
+        const typename = typenames['names'][0]['name'];
+        halfType += typename + " ";
+      }
+      setQuestionHalfType(halfType);
+      console.log(questionHalfType);
 
       const pokemonLength = pokemon['pokemon'].length;
       const fetchPokemonInfo = async () => {
@@ -143,7 +145,7 @@ export default function Buttons() {
         return result;
       };
       const name = await fetchPokemonName();
-      setPokemonName(name['names'][0]['name']);
+      setPokemonNameQ(name['names'][0]['name']);
     }
 
     return (
@@ -162,15 +164,17 @@ export default function Buttons() {
             </Box>
         </Modal>
 
-        <div className='text-[60px]'>第{quizIndex+1}問</div>
+        <div className='text-[60px]'>第{quizIndex}問</div>
         <div className='flex flex-row mt-[10px]'>
           <div className="flex flex-col">
               <img src={pokemonImage} className="border w-[300px] h-[300px]" />
+              <p className="text-[50px]">名前 : {pokemonNameQ}</p>
               <p className="text-[50px]">タイプ : {questionType}</p>
-              <p className="text-[50px]">名前 : {pokemonName}</p>
+              <p className="text-[30px]">タイプ : {questionHalfType}</p>
           </div>
           <div className='flex flex-col ml-[50px]'>
             <img src={pokemonImageUrl} className="border w-[300px] h-[300px]" />
+            <div className="text-[50px]">名前 : {pokemonNameA}</div>
             <div className="text-[50px]">タイプ : {pokemonType}</div>
           </div>
         </div>
