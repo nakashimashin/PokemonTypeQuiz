@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import Modal from '@material-ui/core/Modal/Modal';
 import Box from '@material-ui/core/Box/Box';
 import Link from 'next/link';
@@ -27,30 +27,29 @@ const style ={
 };
 
 
-function QuizApi(): QuizData[] {
-  const outputDataList: QuizData[] = [{
-    question: "ほのお",
-    answer: "みず",
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
-  },
-  {
-    question: "くさ",
-    answer: "ほのお",
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
-  },
-  {
-    question: "みず",
-    answer: "くさ",
-    image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png"
-  },
-];
-return outputDataList;
-}
+// function QuizApi(): QuizData[] {
+//   const outputDataList: QuizData[] = [{
+//     question: "ほのお",
+//     answer: "みず",
+//     image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
+//   },
+//   {
+//     question: "くさ",
+//     answer: "ほのお",
+//     image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png"
+//   },
+//   {
+//     question: "みず",
+//     answer: "くさ",
+//     image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png"
+//   },
+// ];
+// return outputDataList;
+// }
 
 export default function Buttons() {
-    const QuizArray : QuizData[] = QuizApi();
-    const [QuizIndex, setQuizIndex] = useState(0);
-
+    // const QuizArray : QuizData[] = QuizApi();
+    const [quizIndex, setQuizIndex] = useState(0);
     const [CorrectCount, setCorrectCount] = useState(0);
 
     const [open, setOpen] = useState(false);
@@ -64,6 +63,10 @@ export default function Buttons() {
     const [pokemonName, setPokemonName] = useState(" ");
     const [pokemonImage, setPokemonImage] = useState(" ");
     const [questionType, setQusetionType] = useState(" ");
+
+    useEffect(() => {
+      QuestionSet();
+    }, [quizIndex]);
 
 
     const fetchPokemon = async (num:number) =>{
@@ -109,9 +112,14 @@ export default function Buttons() {
         const info = await fetchPokemonInfo();
         setPokemonImageUrl(info['sprites']['front_default'])
     }
-    
+
     const AnswerClick = async () => {
-      console.log("発火")
+      const new_quizIndex = quizIndex+1;
+      setQuizIndex((quizIndex) => new_quizIndex);
+      console.log(new_quizIndex);
+    }
+    
+    const QuestionSet = async () => {
       const index = Math.floor(Math.random()*18 + 1);
       const pokemon = await fetchPokemon(index);
       console.log(pokemon['names'][0]['name']);
@@ -154,7 +162,7 @@ export default function Buttons() {
             </Box>
         </Modal>
 
-        <div className='text-[60px]'>第{QuizIndex+1}問</div>
+        <div className='text-[60px]'>第{quizIndex+1}問</div>
         <div className='flex flex-row mt-[10px]'>
           <div className="flex flex-col">
               <img src={pokemonImage} className="border w-[300px] h-[300px]" />
