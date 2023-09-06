@@ -27,11 +27,11 @@ export default function Buttons() {
 
     const [typesList, setTypesList] = useState<string[]>([]);
     const [pokemonImageUrl, setPokemonImageUrl] = useState<string>(" ");
-    const [pokemonNameA, setPokemonNameA] = useState(" ");
+    const [pokemonNameA, setPokemonNameA] = useState("");
     const [pokemonTypes, setPokemonTypes] = useState("");
-    const [pokemonNameQ, setPokemonNameQ] = useState(" ");
-    const [pokemonImage, setPokemonImage] = useState(" ");
-    const [questionType, setQusetionType] = useState(" ");
+    const [pokemonNameQ, setPokemonNameQ] = useState("");
+    const [pokemonImage, setPokemonImage] = useState("");
+    const [questionType, setQusetionType] = useState("");
     const [questionHalfType, setQuestionHalfType] = useState<string>("");
 
 
@@ -89,6 +89,8 @@ export default function Buttons() {
       }else{
         console.log("不正解");
       }
+      setPokemonImageUrl("");
+      setPokemonNameA("");
       setTypesList([]);
       setPokemonTypes("");
 
@@ -98,6 +100,12 @@ export default function Buttons() {
       };
       const new_quizIndex = quizIndex+1;
       setQuizIndex(() => new_quizIndex);
+    }
+
+    const ResetClick = () => {
+      setPokemonImageUrl("");
+      setPokemonNameA("");
+      setTypesList([]);
     }
     
     const QuestionSet = async () => {
@@ -160,21 +168,24 @@ export default function Buttons() {
             </Box>
         </Modal>
 
-        <div className='text-[60px]'>第{quizIndex}問</div>
+        <div className='text-[50px]'>第{quizIndex}問</div>
         <div className='flex flex-row mt-[10px]'>
           <div className="flex flex-col">
               <img src={pokemonImage} className="border w-[300px] h-[300px]" />
-              <p className="text-[50px]">名前 : {pokemonNameQ}</p>
-              <p className="text-[50px]">タイプ : {questionType}</p>
-              <p className="text-[30px]">タイプ : {questionHalfType}</p>
+              <div className="text-[30px]">名前 : {pokemonNameQ}</div>
+              <div className="text-[30px]">タイプ : {questionType}</div>
+              {/* <div className="text-[30px]">タイプ : {questionHalfType}</div> */}
           </div>
           <div className='flex flex-col ml-[50px]'>
             <img src={pokemonImageUrl} className="border w-[300px] h-[300px]" />
-            <div className="text-[50px]">名前 : {pokemonNameA}</div>
-            <div className="text-[50px]">タイプ : {typesList}</div>
+            <div className="text-[30px]">名前 : {pokemonNameA}</div>
+            <div className="text-[30px]">タイプ : {typesList}</div>
           </div>
         </div>
-        <button onClick={AnswerClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>Answer</button>
+        <div className='flex flex-row space-x-[30px] mt-[10px]'>
+        <button onClick={AnswerClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>答える</button>
+        <button onClick={ResetClick} className='w-[100px] h-[50px] bg-blue-500 hover:bg-blue-300 rounded font-bold text-white'>リセット</button>
+        </div>
         <div className="flex flex-row space-x-[30px]">
           <button onClick={() => handleClick(1)} className="bg-gray-400 hover:bg-gray-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">ノーマル</button>
           <button onClick={() => handleClick(2)} className="bg-red-500 hover:bg-red-300 rounded w-[100px] h-[50px] mt-[30px] font-bold text-white">かくとう</button>
