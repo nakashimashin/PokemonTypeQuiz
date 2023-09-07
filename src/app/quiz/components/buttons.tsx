@@ -171,12 +171,14 @@ export default function Buttons() {
         <div className='text-[50px]'>第{quizIndex}問</div>
         <div className='flex flex-row mt-[10px]'>
           <div className="flex flex-col">
+              <div className='text-[20px]'>防御側</div>
               <img src={pokemonImage} className="border w-[300px] h-[300px]" />
               <div className="text-[30px]">名前 : {pokemonNameQ}</div>
               <div className="text-[30px]">タイプ : {questionType}</div>
               {/* <div className="text-[30px]">タイプ : {questionHalfType}</div> */}
           </div>
           <div className='flex flex-col ml-[50px]'>
+            <div className='text-[20px]'>攻撃側</div>
             <img src={pokemonImageUrl} className="border w-[300px] h-[300px]" />
             <div className="text-[30px]">名前 : {pokemonNameA}</div>
             <div className="text-[30px]">タイプ : {typesList}</div>
